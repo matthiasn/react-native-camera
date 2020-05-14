@@ -72,6 +72,7 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
   private int mFaceDetectorMode = RNFaceDetector.FAST_MODE;
   private int mFaceDetectionLandmarks = RNFaceDetector.NO_LANDMARKS;
   private int mFaceDetectionClassifications = RNFaceDetector.NO_CLASSIFICATIONS;
+  private int mFaceDetectionContours = RNFaceDetector.NO_CONTOURS;
   private int mGoogleVisionBarCodeType = RNBarcodeDetector.ALL_FORMATS;
   private int mGoogleVisionBarCodeMode = RNBarcodeDetector.NORMAL_MODE;
   private boolean mTrackingEnabled = true;
@@ -419,6 +420,7 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
     mFaceDetector = new RNFaceDetector(mThemedReactContext);
     mFaceDetector.setMode(mFaceDetectorMode);
     mFaceDetector.setLandmarkType(mFaceDetectionLandmarks);
+    mFaceDetector.setContourType(mFaceDetectionContours);
     mFaceDetector.setClassificationType(mFaceDetectionClassifications);
     mFaceDetector.setTracking(mTrackingEnabled);
   }
@@ -427,6 +429,13 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
     mFaceDetectionLandmarks = landmarks;
     if (mFaceDetector != null) {
       mFaceDetector.setLandmarkType(landmarks);
+    }
+  }
+
+  public void setFaceDetectionContours(int contours) {
+    mFaceDetectionContours = contours;
+    if (mFaceDetector != null) {
+      mFaceDetector.setContourType(contours);
     }
   }
 

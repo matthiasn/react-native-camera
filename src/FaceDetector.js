@@ -8,6 +8,7 @@ const FaceDetectorModule: Object = NativeModules.RNFaceDetector || {
   Mode: {},
   Landmarks: {},
   Classifications: {},
+  Contours: {},
   detectFaces: () => new Promise((_, reject) => reject(faceDetectionDisabledMessage)),
 };
 
@@ -37,11 +38,18 @@ export type FaceFeature = {
   noseBasePosition?: Point,
   yawAngle?: number,
   rollAngle?: number,
+  contours?: {
+    face: Point[],
+    lowerLipBottom: Point[],
+    leftEye: Point[],
+    // TODO the others
+  },
 };
 
 type DetectionOptions = {
   mode?: $Keys<typeof FaceDetectorModule.Mode>,
   detectLandmarks?: $Keys<typeof FaceDetectorModule.Landmarks>,
+  detectContours?: $Keys<typeof FaceDetectorModule.Contours>,
   runClassifications?: $Keys<typeof FaceDetectorModule.Classifications>,
 };
 
@@ -49,6 +57,7 @@ export default class FaceDetector {
   static Constants = {
     Mode: FaceDetectorModule.Mode,
     Landmarks: FaceDetectorModule.Landmarks,
+    Contours: FaceDetectorModule.Contours,
     Classifications: FaceDetectorModule.Classifications,
   };
 

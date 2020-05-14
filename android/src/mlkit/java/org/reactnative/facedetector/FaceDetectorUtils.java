@@ -3,15 +3,30 @@ package org.reactnative.facedetector;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.google.firebase.ml.vision.common.FirebaseVisionPoint;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark;
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceContour;
+
+import java.util.*;
 
 public class FaceDetectorUtils {
   private static final String[] landmarkNames = {
           "bottomMouthPosition", "leftCheekPosition", "leftEarPosition",
           "leftEyePosition", "leftMouthPosition", "noseBasePosition", "rightCheekPosition",
           "rightEarPosition", "rightEyePosition", "rightMouthPosition"
+  };
+
+  private static final String[] contourNames = {
+          "face", "lowerLipBottom", "leftEye"
+  };
+
+  private static final int[] contourTypes = {
+    FirebaseVisionFaceContour.FACE,
+    FirebaseVisionFaceContour.LOWER_LIP_BOTTOM,
+    FirebaseVisionFaceContour.LEFT_EYE
+    // TODO: other types; add to contourNames and FaceFeature js flow type
   };
 
   public static WritableMap serializeFace(FirebaseVisionFace face) {
@@ -60,6 +75,18 @@ public class FaceDetectorUtils {
         encodedFace.putMap(landmarkNames[i], mapFromPoint(landmark.getPosition(), scaleX, scaleY, width, height, paddingLeft, paddingTop));
       }
     }
+
+    // TODO: check if ALL_POINTS contour is not empty, than we can assume we have contours point
+    WritableMap contours = Arguments.createMap();
+    for (int i = 0; i < contourTypes.length; ++i) {
+      List<FirebaseVisionPoint> contourPoints = face.getContour(contourTypes[i]).getPoints();
+      WritableArray points = Arguments.createArray();
+      for (int j = 0; j < contourPoints.size(); ++j) {
+        points.pushMap(mapFromPoint(contourPoints.get(j), scaleX, scaleY, width, height, paddingLeft, paddingTop));
+      }
+      contours.putArray(contourNames[i], points);
+    }
+    encodedFace.putMap("contours", contours);
 
     WritableMap origin = Arguments.createMap();
     Float x = face.getBoundingBox().exactCenterX() - (face.getBoundingBox().width() / 2 );
@@ -112,6 +139,8 @@ public class FaceDetectorUtils {
         face.putMap(landmarkName, mirroredPosition);
       }
     }
+
+    // TODO: should rotate contours too?
 
     face.putMap("bounds", newBounds);
 

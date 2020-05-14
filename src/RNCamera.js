@@ -247,7 +247,7 @@ type Rect = {
 
 type PropsType = typeof View.props & {
   zoom?: number,
-  useNativeZoom?:boolean,
+  useNativeZoom?: boolean,
   maxZoom?: number,
   ratio?: string,
   focusDepth?: number,
@@ -385,6 +385,7 @@ export default class Camera extends React.Component<PropsType, StateType> {
     faceDetectionMode: (CameraManager.FaceDetection || {}).Mode,
     faceDetectionLandmarks: (CameraManager.FaceDetection || {}).Landmarks,
     faceDetectionClassifications: (CameraManager.FaceDetection || {}).Classifications,
+    faceDetectionContours: (CameraManager.FaceDetection || {}).Contours,
     googleVisionBarcodeType: (CameraManager.GoogleVisionBarcodeDetection || {}).BarcodeType,
     videoStabilizationMode: CameraManager.VideoStabilization || {},
   };
@@ -392,7 +393,7 @@ export default class Camera extends React.Component<PropsType, StateType> {
   static propTypes = {
     ...ViewPropTypes,
     zoom: PropTypes.number,
-    useNativeZoom:PropTypes.bool,
+    useNativeZoom: PropTypes.bool,
     maxZoom: PropTypes.number,
     ratio: PropTypes.string,
     focusDepth: PropTypes.number,
@@ -445,7 +446,7 @@ export default class Camera extends React.Component<PropsType, StateType> {
 
   static defaultProps: Object = {
     zoom: 0,
-    useNativeZoom:false,
+    useNativeZoom: false,
     maxZoom: 0,
     ratio: '4:3',
     focusDepth: 0,
@@ -643,7 +644,7 @@ export default class Camera extends React.Component<PropsType, StateType> {
     if (this.props.onTap && !nativeEvent.isDoubleTap) {
       this.props.onTap(nativeEvent.touchOrigin);
     }
-    if (this.props.onDoubleTap && nativeEvent.isDoubleTap){
+    if (this.props.onDoubleTap && nativeEvent.isDoubleTap) {
       this.props.onTap(nativeEvent.touchOrigin);
     }
   };
@@ -885,7 +886,7 @@ const RNCamera = requireNativeComponent('RNCamera', Camera, {
     accessibilityLabel: true,
     accessibilityLiveRegion: true,
     barCodeScannerEnabled: true,
-    touchDetectorEnabled:true,
+    touchDetectorEnabled: true,
     googleVisionBarcodeDetectorEnabled: true,
     faceDetectorEnabled: true,
     textRecognizerEnabled: true,
@@ -897,7 +898,7 @@ const RNCamera = requireNativeComponent('RNCamera', Camera, {
     onAudioConnected: true,
     onPictureSaved: true,
     onFaceDetected: true,
-    onTouch:true,
+    onTouch: true,
     onLayout: true,
     onMountError: true,
     onSubjectAreaChanged: true,
