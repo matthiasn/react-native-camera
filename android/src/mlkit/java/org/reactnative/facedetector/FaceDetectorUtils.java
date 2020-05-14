@@ -87,17 +87,18 @@ public class FaceDetectorUtils {
       }
     }
 
-    // TODO: check if ALL_POINTS contour is not empty, than we can assume we have contours point
-    WritableMap contours = Arguments.createMap();
-    for (int i = 0; i < contourTypes.length; ++i) {
-      List<FirebaseVisionPoint> contourPoints = face.getContour(contourTypes[i]).getPoints();
-      WritableArray points = Arguments.createArray();
-      for (int j = 0; j < contourPoints.size(); ++j) {
-        points.pushMap(mapFromPoint(contourPoints.get(j), scaleX, scaleY, width, height, paddingLeft, paddingTop));
+    if (!face.getContour(FirebaseVisionFaceContour.ALL_POINTS).getPoints().isEmpty()) {
+      WritableMap contours = Arguments.createMap();
+      for (int i = 0; i < contourTypes.length; ++i) {
+        List<FirebaseVisionPoint> contourPoints = face.getContour(contourTypes[i]).getPoints();
+        WritableArray points = Arguments.createArray();
+        for (int j = 0; j < contourPoints.size(); ++j) {
+          points.pushMap(mapFromPoint(contourPoints.get(j), scaleX, scaleY, width, height, paddingLeft, paddingTop));
+        }
+        contours.putArray(contourNames[i], points);
       }
-      contours.putArray(contourNames[i], points);
+      encodedFace.putMap("contours", contours);
     }
-    encodedFace.putMap("contours", contours);
 
     WritableMap origin = Arguments.createMap();
     Float x = face.getBoundingBox().exactCenterX() - (face.getBoundingBox().width() / 2 );
