@@ -149,7 +149,7 @@
     NSMutableArray *result = [[NSMutableArray alloc] init];
     for (FIRVisionFace *face in faces) {
         NSMutableDictionary *resultDict =
-        [[NSMutableDictionary alloc] initWithCapacity:20];
+        [[NSMutableDictionary alloc] initWithCapacity:21];
         // Boundaries of face in image
         NSDictionary *bounds = [self processBounds:face.frame];
         [resultDict setObject:bounds forKey:@"bounds"];
@@ -241,7 +241,10 @@
             [resultDict setObject:[self processPoint:noseBase.position]
                            forKey:@"noseBasePosition"];
         }
-        
+
+        NSDictionary *contours = [self processContours:face];
+        [resultDict setObject:contours forKey:@"contours"];
+
         // If classification was enabled:
         if (face.hasSmilingProbability) {
             CGFloat smileProb = face.smilingProbability;
@@ -275,7 +278,40 @@
     return boundsDict;
 }
 
-- (NSDictionary *)processPoint:(FIRVisionPoint *)point 
+- (NSDictionary *)processContours:(FIRVisionFace *)face {
+    NSDictionary *contours = @{
+        @"all" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeAll]],
+        @"face" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeFace]],
+        @"leftEye" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeLeftEye]],
+        @"leftEyebrowTop" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeLeftEyebrowTop]],
+        @"leftEyebrowBottom" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeLeftEyebrowBottom]],
+        @"rightEye" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeRightEye]],
+        @"rightEyebrowTop" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeRightEyebrowTop]],
+        @"rightEyebrowBottom" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeRightEyebrowBottom]],
+        @"upperLipTop" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeUpperLipTop]],
+        @"upperLipBottom" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeUpperLipBottom]],
+        @"lowerLipTop" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeLowerLipTop]],
+        @"lowerLipBottom" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeLowerLipBottom]],
+        @"noseBridge" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeNoseBridge]],
+        @"noseBottom" : [self contourToPoints:[face contourOfType:FIRFaceContourTypeNoseBottom]],
+    };
+    return contours;
+}
+
+- (NSArray *)contourToPoints:(FIRVisionFaceContour *)visionFaceContour {
+    NSMutableArray *pointsFormatted = [[NSMutableArray alloc] init];
+    if (visionFaceContour == nil) {
+        return pointsFormatted;
+    }
+
+    for (FIRVisionPoint *point in visionFaceContour.points) {
+        [pointsFormatted addObject:[self processPoint:point]];
+    }
+
+    return pointsFormatted;
+}
+
+- (NSDictionary *)processPoint:(FIRVisionPoint *)point
 {
     float originX = [point.x floatValue] * _scaleX;
     float originY = [point.y floatValue] * _scaleY;
