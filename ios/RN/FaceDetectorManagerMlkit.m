@@ -18,6 +18,7 @@
     self.options = [[FIRVisionFaceDetectorOptions alloc] init];
     self.options.performanceMode = FIRVisionFaceDetectorPerformanceModeFast;
     self.options.landmarkMode = FIRVisionFaceDetectorLandmarkModeNone;
+    self.options.contourMode = FIRVisionFaceDetectorContourModeNone;
     self.options.classificationMode = FIRVisionFaceDetectorClassificationModeNone;
     
     self.vision = [FIRVision vision];
@@ -41,6 +42,10 @@
              @"Landmarks" : @{
                      @"all" : @(RNFaceDetectAllLandmarks),
                      @"none" : @(RNFaceDetectNoLandmarks)
+                     },
+             @"Contours" : @{
+                     @"all" : @(RNFaceDetectAllContours),
+                     @"none" : @(RNFaceDetectNoContours)
                      },
              @"Classifications" : @{
                      @"all" : @(RNFaceRunAllClassifications),
@@ -77,7 +82,21 @@
     }
 }
 
-- (void)setPerformanceMode:(id)json queue:(dispatch_queue_t)sessionQueue 
+- (void)setContoursMode:(id)json queue:(dispatch_queue_t)sessionQueue
+{
+    long requestedValue = [RCTConvert NSInteger:json];
+    if (requestedValue != self.options.contourMode) {
+        if (sessionQueue) {
+            dispatch_async(sessionQueue, ^{
+                self.options.contourMode = requestedValue;
+                self.faceRecognizer =
+                [self.vision faceDetectorWithOptions:self.options];
+            });
+        }
+    }
+}
+
+- (void)setPerformanceMode:(id)json queue:(dispatch_queue_t)sessionQueue
 {
     long requestedValue = [RCTConvert NSInteger:json];
     if (requestedValue != self.options.performanceMode) {
@@ -299,7 +318,12 @@
 {
     return;
 }
-- (void)setLandmarksMode:(id)json:(dispatch_queue_t)sessionQueue 
+- (void)setLandmarksMode:(id)json:(dispatch_queue_t)sessionQueue
+{
+    return;
+}
+
+- (void)setContoursMode:(id)json:(dispatch_queue_t)sessionQueue
 {
     return;
 }
@@ -319,6 +343,7 @@
     return @{
              @"Mode" : @{},
              @"Landmarks" : @{},
+             @"Contours" : @{},
              @"Classifications" : @{}
              };
 }

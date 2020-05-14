@@ -72,6 +72,7 @@
 - (void)updateTrackingEnabled:(id)requestedTracking;
 - (void)updateFaceDetectionMode:(id)requestedMode;
 - (void)updateFaceDetectionLandmarks:(id)requestedLandmarks;
+- (void)updateFaceDetectionContours:(id)requestedContours;
 - (void)updateFaceDetectionClassifications:(id)requestedClassifications;
 - (void)updateRectOfInterest;
 // google Barcode props
