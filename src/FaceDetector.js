@@ -39,10 +39,20 @@ export type FaceFeature = {
   yawAngle?: number,
   rollAngle?: number,
   contours?: {
+    allPoints: Point[],
     face: Point[],
-    lowerLipBottom: Point[],
     leftEye: Point[],
-    // TODO the others
+    leftEyebrowBottom: Point[],
+    leftEyebrowTop: Point[],
+    lowerLipBottom: Point[],
+    lowerLipTop: Point[],
+    noseBottom: Point[],
+    noseBridge: Point[],
+    rightEye: Point[],
+    rightEyebrowBottom: Point[],
+    rightEyebrowTop: Point[],
+    upperLipBottom: Point[],
+    upperLipTop: Point[],
   },
 };
 

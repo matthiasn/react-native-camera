@@ -2,6 +2,7 @@ package org.reactnative.facedetector;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.google.firebase.ml.vision.common.FirebaseVisionPoint;
@@ -19,14 +20,24 @@ public class FaceDetectorUtils {
   };
 
   private static final String[] contourNames = {
-          "face", "lowerLipBottom", "leftEye"
+          "allPoints", "face", "leftEye", "leftEyebrowBottom", "leftEyebrowTop", "lowerLipBottom", "lowerLipTop", "noseBottom", "noseBridge", "rightEye", "rightEyebrowBottom", "rightEyebrowTop", "upperLipBottom", "upperLipTop"
   };
 
   private static final int[] contourTypes = {
+    FirebaseVisionFaceContour.ALL_POINTS,
     FirebaseVisionFaceContour.FACE,
+    FirebaseVisionFaceContour.LEFT_EYE,
+    FirebaseVisionFaceContour.LEFT_EYEBROW_BOTTOM,
+    FirebaseVisionFaceContour.LEFT_EYEBROW_TOP,
     FirebaseVisionFaceContour.LOWER_LIP_BOTTOM,
-    FirebaseVisionFaceContour.LEFT_EYE
-    // TODO: other types; add to contourNames and FaceFeature js flow type
+    FirebaseVisionFaceContour.LOWER_LIP_TOP,
+    FirebaseVisionFaceContour.NOSE_BOTTOM,
+    FirebaseVisionFaceContour.NOSE_BRIDGE,
+    FirebaseVisionFaceContour.RIGHT_EYE,
+    FirebaseVisionFaceContour.RIGHT_EYEBROW_BOTTOM,
+    FirebaseVisionFaceContour.RIGHT_EYEBROW_TOP,
+    FirebaseVisionFaceContour.UPPER_LIP_BOTTOM,
+    FirebaseVisionFaceContour.UPPER_LIP_TOP,
   };
 
   public static WritableMap serializeFace(FirebaseVisionFace face) {
@@ -140,7 +151,19 @@ public class FaceDetectorUtils {
       }
     }
 
-    // TODO: should rotate contours too?
+    ReadableMap contours = face.hasKey("contours") ? face.getMap("contours") : null;
+    if (contours != null) {
+      WritableMap newContours = Arguments.createMap();
+      for (String contourName : contourNames) {
+        ReadableArray contourPoints = contours.getArray(contourName);
+        WritableArray mirroredContourPoints = Arguments.createArray();
+        for (int j = 0; j < contourPoints.size(); ++j) {
+          mirroredContourPoints.pushMap(positionMirroredHorizontally(contourPoints.getMap(j), sourceWidth, scaleX));
+        }
+        newContours.putArray(contourName, mirroredContourPoints);
+      }
+      face.putMap("contours", newContours);
+    }
 
     face.putMap("bounds", newBounds);
 
