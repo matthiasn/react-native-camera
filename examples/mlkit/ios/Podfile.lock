@@ -113,23 +113,23 @@ PODS:
   - Protobuf (3.7.0)
   - React (0.59.1):
     - React/Core (= 0.59.1)
-  - react-native-camera/BarcodeDetectorMLKit (2.2.2):
+  - react-native-camera/BarcodeDetectorMLKit (3.25.0):
     - Firebase/MLVision
     - Firebase/MLVisionBarcodeModel
     - React
     - react-native-camera/RCT
     - react-native-camera/RN
-  - react-native-camera/FaceDetectorMLKit (2.2.2):
+  - react-native-camera/FaceDetectorMLKit (3.25.0):
     - Firebase/MLVision
     - Firebase/MLVisionFaceModel
     - React
     - react-native-camera/RCT
     - react-native-camera/RN
-  - react-native-camera/RCT (2.2.2):
+  - react-native-camera/RCT (3.25.0):
     - React
-  - react-native-camera/RN (2.2.2):
+  - react-native-camera/RN (3.25.0):
     - React
-  - react-native-camera/TextDetector (2.2.2):
+  - react-native-camera/TextDetector (3.25.0):
     - Firebase/MLVision
     - Firebase/MLVisionTextModel
     - React
@@ -195,7 +195,7 @@ DEPENDENCIES:
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - boost-for-react-native
     - Firebase
     - FirebaseAnalytics
@@ -251,10 +251,10 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
-  React: 1d605e098d69bdf08960787f3446f0a9dc2e2ccf
-  react-native-camera: 9c50d7def800895e7991ccda6203929553ceec9c
-  yoga: 128daf064cacaede0c3bb27424b6b4c71052e6cd
+  React: 34a405ead72252839fdc4afc1f972a7ed984af84
+  react-native-camera: c4b1136c213f12b6437f12d78eb1805ca664918c
+  yoga: 8fb47f180b19b0dadb285a09e4c74c8a41721d3a
 
 PODFILE CHECKSUM: ea5c4e2c8f2c607fe7c1cd69dc26067aef6c2ce1
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.9.1

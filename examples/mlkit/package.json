@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "postinstall": "./scripts/rnFixIos.sh; cd ios && pod install"
   },
   "dependencies": {
     "react": "16.8.3",
