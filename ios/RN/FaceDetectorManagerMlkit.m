@@ -242,8 +242,10 @@
                            forKey:@"noseBasePosition"];
         }
 
-        NSDictionary *contours = [self processContours:face];
-        [resultDict setObject:contours forKey:@"contours"];
+        if (self.options.contourMode == FIRVisionFaceDetectorContourModeAll) {
+            NSDictionary *contours = [self processContours:face];
+            [resultDict setObject:contours forKey:@"contours"];
+        }
 
         // If classification was enabled:
         if (face.hasSmilingProbability) {
