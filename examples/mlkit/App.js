@@ -168,6 +168,51 @@ export default class CameraScreen extends React.Component {
     );
   }
 
+  renderContoursOfFace(face) {
+    const renderContourPoints = (name, points) =>
+      points &&
+      points.map((point, i) => (
+        <View
+          key={`${i}`}
+          style={[
+            styles.landmark,
+            {
+              backgroundColor: 'green',
+              left: point.x - landmarkSize / 2,
+              top: point.y - landmarkSize / 2,
+            },
+          ]}
+        />
+      ));
+    return (
+      <View key={`contours-${face.faceID}`}>
+        {face.contours && (
+          <>
+            {/* {renderContourPoints('allPoints', face.contours.allPoints)} */}
+            {renderContourPoints('face', face.contours.face)}
+            {renderContourPoints('leftEye', face.contours.leftEye)}
+            {renderContourPoints('leftEyebrowBottom', face.contours.leftEyebrowBottom)}
+            {renderContourPoints('leftEyebrowTop', face.contours.leftEyebrowTop)}
+            {renderContourPoints('lowerLipBottom', face.contours.lowerLipBottom)}
+            {renderContourPoints('lowerLipTop', face.contours.lowerLipTop)}
+            {renderContourPoints('noseBottom', face.contours.noseBottom)}
+            {renderContourPoints('noseBridge', face.contours.noseBridge)}
+            {renderContourPoints('rightEye', face.contours.rightEye)}
+            {renderContourPoints('rightEyebrowBottom', face.contours.rightEyebrowBottom)}
+            {renderContourPoints('rightEyebrowTop', face.contours.rightEyebrowTop)}
+            {renderContourPoints('upperLipBottom', face.contours.upperLipBottom)}
+            {renderContourPoints('upperLipTop', face.contours.upperLipTop)}
+          </>
+        )}
+      </View>
+    );
+    // return (
+    //   <View style={{ position: 'absolute', top: 0, left: 0, backgroundColor: 'white' }}>
+    //     <Text>{JSON.stringify(face.contours)}</Text>
+    //   </View>
+    // );
+  }
+
   renderFaces = () => (
     <View style={styles.facesContainer} pointerEvents="none">
       {this.state.faces.map(this.renderFace)}
@@ -177,6 +222,12 @@ export default class CameraScreen extends React.Component {
   renderLandmarks = () => (
     <View style={styles.facesContainer} pointerEvents="none">
       {this.state.faces.map(this.renderLandmarksOfFace)}
+    </View>
+  );
+
+  renderContours = () => (
+    <View style={styles.facesContainer} pointerEvents="none">
+      {this.state.faces.map(this.renderContoursOfFace)}
     </View>
   );
 
@@ -266,6 +317,11 @@ export default class CameraScreen extends React.Component {
         faceDetectionClassifications={
           RNCamera.Constants.FaceDetection.Classifications
             ? RNCamera.Constants.FaceDetection.Classifications.all
+            : undefined
+        }
+        faceDetectionContours={
+          RNCamera.Constants.FaceDetection.Contours
+            ? RNCamera.Constants.FaceDetection.Contours.all
             : undefined
         }
         onFacesDetected={canDetectFaces ? this.facesDetected : null}
@@ -398,6 +454,7 @@ export default class CameraScreen extends React.Component {
         </View>
         {!!canDetectFaces && this.renderFaces()}
         {!!canDetectFaces && this.renderLandmarks()}
+        {!!canDetectFaces && this.renderContours()}
         {!!canDetectText && this.renderTextBlocks()}
         {!!canDetectBarcode && this.renderBarcodes()}
       </RNCamera>
