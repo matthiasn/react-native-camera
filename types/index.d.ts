@@ -373,6 +373,22 @@ export interface Face {
   noseBasePosition?: Point;
   yawAngle?: number;
   rollAngle?: number;
+  contours?: {
+    allPoints: Point[];
+    face: Point[];
+    leftEye: Point[];
+    leftEyebrowBottom: Point[];
+    leftEyebrowTop: Point[];
+    lowerLipBottom: Point[];
+    lowerLipTop: Point[];
+    noseBottom: Point[];
+    noseBridge: Point[];
+    rightEye: Point[];
+    rightEyebrowBottom: Point[];
+    rightEyebrowTop: Point[];
+    upperLipBottom: Point[];
+    upperLipTop: Point[];
+  };
 }
 
 export interface TrackedTextFeatureRecursive {
