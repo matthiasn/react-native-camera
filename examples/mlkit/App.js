@@ -118,11 +118,15 @@ export default class CameraScreen extends React.Component {
   renderFace = ({ bounds, faceID, rollAngle, yawAngle }) => (
     <View
       key={faceID}
-      transform={[
-        { perspective: 600 },
-        { rotateZ: `${rollAngle.toFixed(0)}deg` },
-        { rotateY: `${yawAngle.toFixed(0)}deg` },
-      ]}
+      transform={
+        rollAngle != null && yawAngle != null
+          ? [
+              { perspective: 600 },
+              { rotateZ: `${rollAngle.toFixed(0)}deg` },
+              { rotateY: `${yawAngle.toFixed(0)}deg` },
+            ]
+          : undefined
+      }
       style={[
         styles.face,
         {
@@ -133,8 +137,8 @@ export default class CameraScreen extends React.Component {
       ]}
     >
       <Text style={styles.faceText}>ID: {faceID}</Text>
-      <Text style={styles.faceText}>rollAngle: {rollAngle.toFixed(0)}</Text>
-      <Text style={styles.faceText}>yawAngle: {yawAngle.toFixed(0)}</Text>
+      {rollAngle != null && <Text style={styles.faceText}>rollAngle: {rollAngle.toFixed(0)}</Text>}
+      {yawAngle != null && <Text style={styles.faceText}>yawAngle: {yawAngle.toFixed(0)}</Text>}
     </View>
   );
 
@@ -311,12 +315,12 @@ export default class CameraScreen extends React.Component {
         }}
         faceDetectionLandmarks={
           RNCamera.Constants.FaceDetection.Landmarks
-            ? RNCamera.Constants.FaceDetection.Landmarks.all
+            ? RNCamera.Constants.FaceDetection.Landmarks.none
             : undefined
         }
         faceDetectionClassifications={
           RNCamera.Constants.FaceDetection.Classifications
-            ? RNCamera.Constants.FaceDetection.Classifications.all
+            ? RNCamera.Constants.FaceDetection.Classifications.none
             : undefined
         }
         faceDetectionContours={
