@@ -14,6 +14,23 @@ const FaceDetectorModule: Object = NativeModules.RNFaceDetector || {
 
 type Point = { x: number, y: number };
 
+export type FaceContours = {
+  all: Point[],
+  face: Point[],
+  leftEye: Point[],
+  leftEyebrowBottom: Point[],
+  leftEyebrowTop: Point[],
+  lowerLipBottom: Point[],
+  lowerLipTop: Point[],
+  noseBottom: Point[],
+  noseBridge: Point[],
+  rightEye: Point[],
+  rightEyebrowBottom: Point[],
+  rightEyebrowTop: Point[],
+  upperLipBottom: Point[],
+  upperLipTop: Point[],
+};
+
 export type FaceFeature = {
   bounds: {
     size: {
@@ -38,22 +55,7 @@ export type FaceFeature = {
   noseBasePosition?: Point,
   yawAngle?: number,
   rollAngle?: number,
-  contours?: {
-    allPoints: Point[],
-    face: Point[],
-    leftEye: Point[],
-    leftEyebrowBottom: Point[],
-    leftEyebrowTop: Point[],
-    lowerLipBottom: Point[],
-    lowerLipTop: Point[],
-    noseBottom: Point[],
-    noseBridge: Point[],
-    rightEye: Point[],
-    rightEyebrowBottom: Point[],
-    rightEyebrowTop: Point[],
-    upperLipBottom: Point[],
-    upperLipTop: Point[],
-  },
+  contours?: FaceContours,
 };
 
 type DetectionOptions = {

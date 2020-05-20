@@ -20,7 +20,7 @@ public class FaceDetectorUtils {
   };
 
   private static final String[] contourNames = {
-          "allPoints", "face", "leftEye", "leftEyebrowBottom", "leftEyebrowTop", "lowerLipBottom", "lowerLipTop", "noseBottom", "noseBridge", "rightEye", "rightEyebrowBottom", "rightEyebrowTop", "upperLipBottom", "upperLipTop"
+          "all", "face", "leftEye", "leftEyebrowBottom", "leftEyebrowTop", "lowerLipBottom", "lowerLipTop", "noseBottom", "noseBridge", "rightEye", "rightEyebrowBottom", "rightEyebrowTop", "upperLipBottom", "upperLipTop"
   };
 
   private static final int[] contourTypes = {
