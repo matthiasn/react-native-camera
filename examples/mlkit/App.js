@@ -173,48 +173,51 @@ export default class CameraScreen extends React.Component {
   }
 
   renderContoursOfFace(face) {
-    const renderContourPoints = (name, points) =>
-      points &&
-      points.map((point, i) => (
-        <View
-          key={`${i}`}
-          style={[
-            styles.landmark,
-            {
-              backgroundColor: 'green',
-              left: point.x - landmarkSize / 2,
-              top: point.y - landmarkSize / 2,
-            },
-          ]}
-        />
-      ));
+    const { contours } = face;
     return (
-      <View key={`contours-${face.faceID}`}>
-        {face.contours && (
-          <>
-            {/* {renderContourPoints('allPoints', face.contours.allPoints)} */}
-            {renderContourPoints('face', face.contours.face)}
-            {renderContourPoints('leftEye', face.contours.leftEye)}
-            {renderContourPoints('leftEyebrowBottom', face.contours.leftEyebrowBottom)}
-            {renderContourPoints('leftEyebrowTop', face.contours.leftEyebrowTop)}
-            {renderContourPoints('lowerLipBottom', face.contours.lowerLipBottom)}
-            {renderContourPoints('lowerLipTop', face.contours.lowerLipTop)}
-            {renderContourPoints('noseBottom', face.contours.noseBottom)}
-            {renderContourPoints('noseBridge', face.contours.noseBridge)}
-            {renderContourPoints('rightEye', face.contours.rightEye)}
-            {renderContourPoints('rightEyebrowBottom', face.contours.rightEyebrowBottom)}
-            {renderContourPoints('rightEyebrowTop', face.contours.rightEyebrowTop)}
-            {renderContourPoints('upperLipBottom', face.contours.upperLipBottom)}
-            {renderContourPoints('upperLipTop', face.contours.upperLipTop)}
-          </>
-        )}
-      </View>
+      <>
+        {Object.keys(contours).map(contourKey => {
+          if (contourKey === 'all' || !contours[contourKey] || !contours[contourKey].length) {
+            return null;
+          }
+          const points = contours[contourKey];
+          const half = Math.floor(points.length / 2);
+          return (
+            <>
+              {points.map((point: Point, i) => (
+                <View
+                  key={`face-pt-${contourKey}-${i}`}
+                  style={{
+                    position: 'absolute',
+                    top: point.y,
+                    left: point.x,
+                    backgroundColor:
+                      i <= half
+                        ? i === 0
+                          ? 'rgba(255, 0, 0, 0.8)'
+                          : 'rgba(128, 0, 255, 0.8)'
+                        : 'rgba(0, 255, 0, 0.8)',
+                    width: 5,
+                    height: 5,
+                  }}
+                />
+              ))}
+              <Text
+                style={{
+                  position: 'absolute',
+                  top: points[0].y,
+                  left: points[0].x,
+                  fontSize: 8,
+                  color: 'white',
+                }}
+              >
+                {contourKey}
+              </Text>
+            </>
+          );
+        })}
+      </>
     );
-    // return (
-    //   <View style={{ position: 'absolute', top: 0, left: 0, backgroundColor: 'white' }}>
-    //     <Text>{JSON.stringify(face.contours)}</Text>
-    //   </View>
-    // );
   }
 
   renderFaces = () => (
