@@ -1,8 +1,11 @@
 /* eslint-disable no-console */
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Slider } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Slider, Dimensions } from 'react-native';
 // eslint-disable-next-line import/no-unresolved
 import { RNCamera } from 'react-native-camera';
+
+const cameraRatio = 4 / 3;
+const windowWidth = Dimensions.get('window').width;
 
 const flashModeOrder = {
   off: 'on',
@@ -30,7 +33,7 @@ export default class CameraScreen extends React.Component {
     depth: 0,
     type: 'back',
     whiteBalance: 'auto',
-    ratio: '16:9',
+    ratio: '4:3',
     recordOptions: {
       mute: false,
       maxDuration: 5,
@@ -181,7 +184,7 @@ export default class CameraScreen extends React.Component {
             return null;
           }
           const points = contours[contourKey];
-          const half = Math.floor(points.length / 2);
+          const l = points.length;
           return (
             <>
               {points.map((point: Point, i) => (
@@ -191,12 +194,9 @@ export default class CameraScreen extends React.Component {
                     position: 'absolute',
                     top: point.y,
                     left: point.x,
-                    backgroundColor:
-                      i <= half
-                        ? i === 0
-                          ? 'rgba(255, 0, 0, 0.8)'
-                          : 'rgba(128, 0, 255, 0.8)'
-                        : 'rgba(0, 255, 0, 0.8)',
+                    backgroundColor: `rgba(${Math.floor((255 * i) / l)}, ${Math.floor(
+                      (255 * (l - i)) / l,
+                    )}, 0, 0.8)`,
                     width: 5,
                     height: 5,
                   }}
@@ -300,7 +300,8 @@ export default class CameraScreen extends React.Component {
           this.camera = ref;
         }}
         style={{
-          flex: 1,
+          width: windowWidth,
+          height: windowWidth * cameraRatio,
         }}
         type={this.state.type}
         flashMode={this.state.flash}
