@@ -491,7 +491,18 @@ interface DetectionOptions {
 export class FaceDetector {
   private constructor();
   static Constants: Constants['FaceDetection'];
-  static detectFacesAsync(uri: string, options?: DetectionOptions): Promise<Face[]>;
+  static detectFacesAsync(
+    uri: string,
+    options?: DetectionOptions,
+  ): Promise<{
+    faces: Array<Face>;
+    image: {
+      uri: string;
+      width: number;
+      height: number;
+      orientation: any;
+    };
+  }>;
 }
 
 // -- DEPRECATED CONTENT BELOW

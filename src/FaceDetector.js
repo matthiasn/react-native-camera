@@ -73,7 +73,18 @@ export default class FaceDetector {
     Classifications: FaceDetectorModule.Classifications,
   };
 
-  static detectFacesAsync(uri: string, options: ?DetectionOptions): Promise<Array<FaceFeature>> {
+  static detectFacesAsync(
+    uri: string,
+    options: ?DetectionOptions,
+  ): Promise<{
+    faces: Array<FaceFeature>,
+    image: {
+      uri: string,
+      width: number,
+      height: number,
+      orientation: any,
+    },
+  }> {
     return FaceDetectorModule.detectFaces({ ...options, uri });
   }
 }
