@@ -67,9 +67,9 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
     }
     FirebaseVisionImageMetadata metadata = new FirebaseVisionImageMetadata.Builder()
             .setWidth(mWidth)
-            .setHeight(mHeight)
-            .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_YV12)
-            .setRotation(getFirebaseRotation())
+             .setHeight(mHeight)
+             .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_YV12)
+             .setRotation(getFirebaseRotation())
             .build();
     FirebaseVisionImage image = FirebaseVisionImage.fromByteArray(mImageData, metadata);
 
@@ -125,10 +125,10 @@ public class FaceDetectorAsyncTask extends android.os.AsyncTask<Void, Void, Void
 
     for (FirebaseVisionFace face : faces) {
       WritableMap serializedFace = FaceDetectorUtils.serializeFace(face, mScaleX, mScaleY, mWidth, mHeight, mPaddingLeft, mPaddingTop);
+      serializedFace = FaceDetectorUtils.changeAnglesDirection(serializedFace);
+
       if (mImageDimensions.getFacing() == CameraView.FACING_FRONT) {
-        serializedFace = FaceDetectorUtils.rotateFaceX(serializedFace, mImageDimensions.getWidth(), mScaleX);
-      } else {
-        serializedFace = FaceDetectorUtils.changeAnglesDirection(serializedFace);
+        serializedFace.putDouble("yawAngle", serializedFace.getDouble("yawAngle") + 360 % 360);
       }
       facesList.pushMap(serializedFace);
     }

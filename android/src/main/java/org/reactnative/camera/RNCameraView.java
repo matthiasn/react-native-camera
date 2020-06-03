@@ -439,6 +439,17 @@ public class RNCameraView extends CameraView implements LifecycleEventListener, 
     }
   }
 
+  public void setFacing(int facing) {
+    super.setFacing(facing);
+
+    View preview = getView();
+    if (preview == null) {
+      return;
+    }
+    // TODO: as prop: mirror=true/false
+    preview.setScaleX(facing == CameraView.FACING_FRONT ? -1 : 1);
+  }
+
   public void setFaceDetectionClassifications(int classifications) {
     mFaceDetectionClassifications = classifications;
     if (mFaceDetector != null) {
