@@ -31,7 +31,7 @@ export default class CameraScreen extends React.Component {
     zoom: 0,
     autoFocus: 'on',
     depth: 0,
-    type: 'back',
+    type: 'front',
     whiteBalance: 'auto',
     ratio: '4:3',
     recordOptions: {
@@ -40,7 +40,7 @@ export default class CameraScreen extends React.Component {
       quality: RNCamera.Constants.VideoQuality['288p'],
     },
     isRecording: false,
-    canDetectFaces: false,
+    canDetectFaces: true,
     canDetectText: false,
     canDetectBarcode: false,
     faces: [],
@@ -118,32 +118,32 @@ export default class CameraScreen extends React.Component {
 
   facesDetected = ({ faces }) => this.setState({ faces });
 
-  renderFace = ({ bounds, faceID, rollAngle, yawAngle }) => (
-    <View
-      key={faceID}
-      transform={
-        rollAngle != null && yawAngle != null
-          ? [
+  renderFace = ({ bounds, faceID, rollAngle, yawAngle }) => {
+    return (
+      <View
+        key={faceID}
+        style={[
+          styles.face,
+          {
+            ...bounds.size,
+            left: bounds.origin.x,
+            top: bounds.origin.y,
+            transform: [
               { perspective: 600 },
-              { rotateZ: `${rollAngle.toFixed(0)}deg` },
-              { rotateY: `${yawAngle.toFixed(0)}deg` },
-            ]
-          : undefined
-      }
-      style={[
-        styles.face,
-        {
-          ...bounds.size,
-          left: bounds.origin.x,
-          top: bounds.origin.y,
-        },
-      ]}
-    >
-      <Text style={styles.faceText}>ID: {faceID}</Text>
-      {rollAngle != null && <Text style={styles.faceText}>rollAngle: {rollAngle.toFixed(0)}</Text>}
-      {yawAngle != null && <Text style={styles.faceText}>yawAngle: {yawAngle.toFixed(0)}</Text>}
-    </View>
-  );
+              { rotateZ: `${(rollAngle || 0).toFixed(0)}deg` },
+              { rotateY: `${(yawAngle || 0).toFixed(0)}deg` },
+            ],
+          },
+        ]}
+      >
+        <Text style={styles.faceText}>ID: {faceID}</Text>
+        {rollAngle != null && (
+          <Text style={styles.faceText}>rollAngle: {rollAngle.toFixed(0)}</Text>
+        )}
+        {yawAngle != null && <Text style={styles.faceText}>yawAngle: {yawAngle.toFixed(0)}</Text>}
+      </View>
+    );
+  };
 
   renderLandmarksOfFace(face) {
     const renderLandmark = position =>
@@ -175,8 +175,12 @@ export default class CameraScreen extends React.Component {
     );
   }
 
-  renderContoursOfFace(face) {
+  renderContoursOfFace(face: Face) {
     const { contours } = face;
+    if (!face.contours) {
+      return null;
+    }
+
     return (
       <>
         {Object.keys(contours).map(contourKey => {
@@ -192,13 +196,13 @@ export default class CameraScreen extends React.Component {
                   key={`face-pt-${contourKey}-${i}`}
                   style={{
                     position: 'absolute',
-                    top: point.y,
-                    left: point.x,
+                    top: point.y - 2,
+                    left: point.x - 2,
                     backgroundColor: `rgba(${Math.floor((255 * i) / l)}, ${Math.floor(
                       (255 * (l - i)) / l,
                     )}, 0, 0.8)`,
-                    width: 5,
-                    height: 5,
+                    width: 4,
+                    height: 4,
                   }}
                 />
               ))}
@@ -332,6 +336,7 @@ export default class CameraScreen extends React.Component {
             ? RNCamera.Constants.FaceDetection.Contours.all
             : undefined
         }
+        faceDetectionMode={RNCamera.Constants.FaceDetection.Mode.accurate}
         onFacesDetected={canDetectFaces ? this.facesDetected : null}
         onTextRecognized={canDetectText ? this.textRecognized : null}
         onGoogleVisionBarcodesDetected={canDetectBarcode ? this.barcodeRecognized : null}
